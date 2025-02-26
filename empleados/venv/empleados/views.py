@@ -109,32 +109,29 @@ def empleado_detail(request, pk):
     elif request.method == 'PUT':
         try:
             data = request.data
-            print(f"Datos recibidos en backend: {data}")  # Depuración
+            print(f"Datos recibidos en backend: {data}") 
 
-            # Validar que al menos un campo se está actualizando
             if not data:
                 return Response({"error": "No se enviaron datos para actualizar"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Validar que el nombre o el email no estén repetidos en otros empleados
             if 'nombre' in data and Empleado.objects.exclude(id=empleado.id).filter(nombre=data['nombre']).exists():
                 return Response({"error": "El nombre ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
             if 'email' in data and Empleado.objects.exclude(id=empleado.id).filter(email=data['email']).exists():
                 return Response({"error": "El correo ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Serializar los datos parcialmente
             serializer = EmpleadoSerializer(empleado, data=data, partial=True)
 
             if serializer.is_valid():
-                empleado = serializer.save()  # Guardar los cambios directamente
-                print(f"✅ Empleado actualizado correctamente: {empleado}")  # Confirmación
+                empleado = serializer.save()  
+                print(f"Empleado actualizado correctamente: {empleado}")  
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            print(f"Errores en la validación: {serializer.errors}")  # Mostrar errores si hay
+            print(f"Errores en la validación: {serializer.errors}")  
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(f"Error inesperado: {str(e)}")  # Imprimir errores en el backend
+            print(f"Error inesperado: {str(e)}")  
             return Response({"error": f"Error inesperado: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     elif request.method == 'DELETE':

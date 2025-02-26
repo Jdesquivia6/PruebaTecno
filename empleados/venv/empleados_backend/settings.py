@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'empleados',
     'django_filters',
-    "corsheaders"
+    "corsheaders",
+    "rest_framework_swagger"
 ]
 
 MIDDLEWARE = [
